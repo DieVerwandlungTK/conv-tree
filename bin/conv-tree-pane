@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# herdr pane entrypoint: show the conversation tree for this pane's cwd.
+set -euo pipefail
+root="${HERDR_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+exec uv run --quiet --project "$root" conv-tree --cwd "$PWD"

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# herdr action: open the tree as a right split of the calling pane, in that pane's cwd.
+set -euo pipefail
+herdr="${HERDR_BIN_PATH:-herdr}"
+pane="${HERDR_PANE_ID:?HERDR_PANE_ID is not set (run inside herdr)}"
+cwd="$("$herdr" pane get "$pane" | python3 -c 'import json,sys; p=json.load(sys.stdin)["result"]["pane"]; print(p.get("foreground_cwd") or p["cwd"])')"
+exec "$herdr" plugin pane open --plugin conv-tree --entrypoint tree --placement split \
+  --direction right --target-pane "$pane" --cwd "$cwd" --no-focus
