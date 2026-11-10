@@ -1,6 +1,6 @@
 import time
 from factory import rec, write_session
-from conv_tree.graph import ConvGraph, is_prompt, prompt_text
+from conv_tree.graph import ConvGraph, is_prompt, prompt_text, summary_line
 
 
 def texts(nodes):
@@ -123,3 +123,11 @@ def test_large_session_perf(tmp_path):
     f = g.forest()
     assert time.perf_counter() - t0 < 2.0
     assert len(f) == 1
+
+
+def test_summary_line_skips_paste_wrapper():
+    text = '<pasted_content id="b9d4">\n\nThis is a merge test.\n\nmore\n</pasted_content id="b9d4">'
+    assert summary_line(text) == "This is a merge test."
+    assert summary_line("before <pasted_content id=\"x\">\nbody\n</pasted_content id=\"x\">") == "before"
+    assert summary_line("plain\nsecond") == "plain"
+    assert summary_line("") == ""

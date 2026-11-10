@@ -1,6 +1,7 @@
 """Union of all session files in a project, viewed as a tree of user prompts."""
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -42,6 +43,17 @@ def _content_text(content) -> str:
             elif b.get("type") == "image":
                 parts.append("[image]")
         return " ".join(p for p in parts if p)
+    return ""
+
+
+_PASTE_TAG = re.compile(r"</?pasted_content\b[^>]*>")
+
+
+def summary_line(text: str) -> str:
+    """First non-empty line for the tree label, ignoring pasted-content wrapper tags."""
+    for line in _PASTE_TAG.sub("\n", text).splitlines():
+        if line.strip():
+            return line.strip()
     return ""
 
 

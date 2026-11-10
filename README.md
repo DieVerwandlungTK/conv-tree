@@ -6,12 +6,17 @@ A herdr plugin that shows your Claude Code conversations as a tree of the prompt
 - The current position of the focused Claude pane is marked with `▶`. Positions of other Claude panes are marked with `▷`.
 - You can fork from any past prompt, or send the gist of one branch to another (merge). New conversations open in a new pane beside the current one; the original pane is left untouched.
 
-## Setup
+## Requirements
+
+- Linux
+- [herdr](https://herdr.dev) 0.8.0 or later
+- [uv](https://docs.astral.sh/uv/) (Python dependencies are installed automatically the first time the tree opens)
+- Claude Code
+
+## Install
 
 ```bash
-cd /path/to/conv-tree
-uv sync
-herdr plugin link .
+herdr plugin install DieVerwandlungTK/conv-tree
 ```
 
 To open the tree with a key, add the following to `~/.config/herdr/config.toml` (pick any key you like):
@@ -25,6 +30,8 @@ description = "conversation tree"
 ```
 
 Then run `herdr server reload-config`. Press the key in a Claude Code pane and the tree opens to the right of that pane.
+
+Without a key binding, you can also open it with `herdr plugin action invoke open --plugin conv-tree` (it opens next to the pane focused in the UI).
 
 ## Keys (tree pane)
 
@@ -50,6 +57,10 @@ Then run `herdr server reload-config`. Press the key in a Claude Code pane and t
 ## Development
 
 ```bash
+git clone https://github.com/DieVerwandlungTK/conv-tree
+cd conv-tree
+uv sync
+herdr plugin link .                                       # use the local checkout instead of the installed copy
 uv run pytest -q
 uv run conv-tree --cwd /path/to/project                   # view only, outside herdr
 uv run conv-tree --cwd /path/to/project --branches-only   # start in the branches-only view

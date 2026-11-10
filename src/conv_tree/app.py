@@ -13,7 +13,7 @@ from textual.screen import ModalScreen
 from textual.widgets import Footer, Label, Static, TextArea, Tree
 
 from .actions import open_fork, open_merge, open_session, prepare_fork, prepare_merge, prepare_open
-from .graph import ConvGraph, PromptNode
+from .graph import ConvGraph, PromptNode, summary_line
 from .herdr import ClaudePane, Herdr, claude_panes
 from .merge import merge_text
 from .paths import DEFAULT_CLAUDE_HOME, project_dir, sessions_dir
@@ -173,7 +173,7 @@ class ConvTreeApp(App):
 
     # -- tree rendering ----------------------------------------------------
     def _label(self, n: PromptNode) -> Text:
-        first = (n.text.splitlines() or [""])[0]
+        first = summary_line(n.text)
         if len(first) > 80:
             first = first[:79] + "…"
         if n.uuid == self.markers.current:
